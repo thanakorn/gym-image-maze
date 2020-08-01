@@ -5,22 +5,22 @@ from typing import List
 from envs.models import Robot, Wall, Action, Reward
 from envs.utilities import distance, map_tuple, dist_from_point_to_line
 
-SIZE = (84,84)
 BALCK = (0,0,0)
 
 class Maze(object):
-    def __init__(self, size, robot_pos, robot_size, goal_pos, walls: List[Wall]):
+    def __init__(self, size, robot_pos, robot_size, goal_pos, walls: List[Wall] = []):
         self.size = size
         self.robot = Robot(robot_pos, robot_size)
         self.goal = goal_pos
-        self.walls = walls
         # Add borders
-        height, width = SIZE
-        walls.append(Wall((0, 0), (width - 1, 0)))
-        walls.append(Wall((0, 0), (0, height - 1)))
-        walls.append(Wall((0, height - 1), (height - 1, width - 1)))
-        walls.append(Wall((0, height - 1), (height - 1, width - 1)))
-        walls.append(Wall((width - 1, height - 1), (width - 1,0)))
+        height, width = (size, size)
+        self.walls = [
+            Wall((0, 0), (width - 1, 0)),
+            Wall((0, 0), (0, height - 1)),
+            Wall((0, height - 1), (height - 1, width - 1)),
+            Wall((width - 1, height - 1), (width - 1,0))
+        ]
+        self.walls.extend(walls)
         
     def move_robot(action: Action):
         new_pos = add_tuple(new_pos, action)

@@ -1,5 +1,9 @@
 import math
-from models import Point
 
-def distance(a: Point, b: Point):
-    return math.sqrt((a.x - b.x)**2 + (a.y - b.y)**2)
+def add_tuple(t1, t2):
+    return tuple(map(lambda a, b: a + b, t1, t2))
+
+def distance(a, b):
+    ax, ay = a
+    bx, by = b
+    return math.sqrt((ax - bx)**2 + (ay - by)**2)

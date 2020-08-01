@@ -1,25 +1,20 @@
 from enum import Enum
+from utilities import distance, add_tuple
 
 class Action(Enum):
     Left    = (-1, 0)
     Right   = (1, 0)
     Up      = (0, -1)
     Down    = (0, 1)
-    
-class Point(object):
-    def __init__(self, x, y):
-        self.x = x
-        self.y = y
+    Stop    = (0, 0)
         
 class Robot(object):
-    def __init__(self, position, radius):
+    def __init__(self, position, size):
         self.position = position
-        self.radius = radius
+        self.size = size
         
     def move(self, action):
-        dx, dy = action
-        self.position.x += dx * (self.radius * 2)
-        self.position.y += dy * (self.radius * 2)
+        self.position = add_tuple(self.position, action)
 
 class Wall(object):
     def __init__(self, a, b):
@@ -27,4 +22,4 @@ class Wall(object):
         self.b = b
         
     def length(self):
-        return math.sqrt((self.a.x - self.b.x)**2 + (self.a.y - self.b.y)**2)
+        return distance(self.a, self.b)

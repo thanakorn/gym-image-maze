@@ -1,5 +1,6 @@
 from enum import Enum
-from utilities import distance, add_tuple
+from envs.utilities import distance, map_tuple
+from operator import *
 
 class Action(Enum):
     Left    = (-1, 0)
@@ -19,7 +20,8 @@ class Robot(object):
         self.size = size
         
     def move(self, action):
-        self.position = add_tuple(self.position, action)
+        d = map_tuple(mul, (self.size, self.size), action.value)
+        self.position = map_tuple(add, self.position, d)
 
 class Wall(object):
     def __init__(self, a, b):

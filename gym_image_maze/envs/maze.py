@@ -1,9 +1,9 @@
 import cv2 as cv
 import numpy as np
 
-from models import Robot, Wall, Action, Reward
 from typing import List
-from utilities import distance, add_tuple, dist_from_point_to_line
+from envs.models import Robot, Wall, Action, Reward
+from envs.utilities import distance, map_tuple, dist_from_point_to_line
 
 SIZE = (84,84)
 BALCK = (0,0,0)

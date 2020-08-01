@@ -7,6 +7,11 @@ class Action(Enum):
     Up      = (0, -1)
     Down    = (0, 1)
     Stop    = (0, 0)
+    
+class Reward(Enum):
+    Closer  = 1
+    Further = -1
+    Goal    = 1000
         
 class Robot(object):
     def __init__(self, position, size):

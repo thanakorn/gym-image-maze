@@ -1,7 +1,9 @@
-from models import Robot, Wall, Action
-from typing import List
 import cv2 as cv
 import numpy as np
+
+from models import Robot, Wall, Action, Reward
+from typing import List
+from utilities import distance, add_tuple, dist_from_point_to_line
 
 SIZE = (84,84)
 BALCK = (0,0,0)
@@ -20,6 +22,10 @@ class Maze(object):
         walls.append(Wall((0, height - 1), (height - 1, width - 1)))
         walls.append(Wall((width - 1, height - 1), (width - 1,0)))
         
+    def move_robot(action: Action):
+        new_pos = add_tuple(new_pos, action)
+        if not self.collide(new_pos):
+            self.robot.move(action)
         
     def to_image(self, size):
         img = np.ones((self.size, self.size), dtype=np.uint8) * 255
@@ -29,3 +35,10 @@ class Maze(object):
             cv.line(img, wall.a, wall.b, BALCK)
         img = cv.resize(img, (size, size), interpolation=cv.INTER_NEAREST)
         return img
+    
+    def collide(self, pos):
+        # for wall in self.walls:
+        #     if dist_from_point_to_line(pos, wall.a, wall.b) < self.robot.size:
+        #         return True
+        # return False
+        return False

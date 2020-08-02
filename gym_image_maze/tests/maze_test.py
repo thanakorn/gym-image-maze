@@ -1,6 +1,7 @@
 import unittest
 from envs.maze import Maze
-from envs.models import Wall
+from envs.models import Wall, Action
+from envs.utilities import dist_from_point_to_line
 
 class MazeTest(unittest.TestCase):
     def test_maze_init(self):
@@ -33,4 +34,59 @@ class MazeTest(unittest.TestCase):
         self.assertEqual(maze.walls[4].b, (3,4))
         self.assertEqual(maze.walls[5].a, (7,0))
         self.assertEqual(maze.walls[5].b, (7,3))
+        
+    def test_maze_move_robot_no_collision(self):
+        maze = Maze(size=10, robot_pos=(3, 7), robot_size=2, goal_pos=(2,2))
+        maze.move_robot(Action.Up)
+        self.assertEqual(maze.robot.position, (3,5))
+        maze.move_robot(Action.Right)
+        self.assertEqual(maze.robot.position, (5,5))
+        maze.move_robot(Action.Down)
+        self.assertEqual(maze.robot.position, (5,7))
+        maze.move_robot(Action.Left)
+        self.assertEqual(maze.robot.position, (3,7))
+        
+    def test_maze_move_robot_prevent_border_collision(self):
+        maze = Maze(size=10, robot_pos=(3, 7), robot_size=2, goal_pos=(2,2))
+        maze.move_robot(Action.Down)
+        self.assertEqual(maze.robot.position, (3,7))
+        maze.move_robot(Action.Left)
+        self.assertEqual(maze.robot.position, (3,7))
+        maze.move_robot(Action.Right)
+        maze.move_robot(Action.Right)
+        self.assertEqual(maze.robot.position, (7,7))
+        maze.move_robot(Action.Right)
+        self.assertEqual(maze.robot.position, (7,7))
+        maze.move_robot(Action.Up)
+        maze.move_robot(Action.Up)
+        self.assertEqual(maze.robot.position, (7,3))
+        maze.move_robot(Action.Up)
+        self.assertEqual(maze.robot.position, (7,3))
+        
+    def test_maze_move_robot_prevent_wall_collision(self):
+        walls = [
+            Wall((0,5), (3,5)), 
+            Wall((8,9), (8,7)),
+            Wall((7,1), (8,3))
+        ]
+        maze = Maze(size=10, robot_pos=(3, 7), robot_size=2, goal_pos=(2,2), walls=walls)
+        self.assertTrue(maze.collide((3,5)))
+        maze.move_robot(Action.Up)
+        self.assertEqual(maze.robot.position, (3,7))
+        self.assertFalse(maze.collide((5,7)))
+        maze.move_robot(Action.Right)
+        self.assertEqual(maze.robot.position, (5,7))
+        self.assertTrue(maze.collide((7,7)))
+        maze.move_robot(Action.Right)
+        self.assertEqual(maze.robot.position, (5,7))
+        maze.move_robot(Action.Up)
+        self.assertEqual(maze.robot.position, (5,5))
+        maze.move_robot(Action.Up)
+        self.assertEqual(maze.robot.position, (5,3))
+        self.assertTrue(maze.collide((7,3)))
+        maze.move_robot(Action.Right)
+        self.assertEqual(maze.robot.position, (5,3))
+        maze.move_robot(Action.Left)
+        self.assertEqual(maze.robot.position, (3,3))
+        
         

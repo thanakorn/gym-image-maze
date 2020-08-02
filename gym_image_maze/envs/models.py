@@ -20,8 +20,12 @@ class Robot(object):
         self.size = size
         
     def move(self, action):
+        self.position = self.calculate_new_pos(action)
+        
+    def calculate_new_pos(self, action):
         d = map_tuple(mul, (self.size, self.size), action.value)
-        self.position = map_tuple(add, self.position, d)
+        new_pos = map_tuple(add, self.position, d)
+        return new_pos
 
 class Wall(object):
     def __init__(self, a, b):

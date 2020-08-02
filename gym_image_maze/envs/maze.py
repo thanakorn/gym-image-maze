@@ -4,6 +4,7 @@ import numpy as np
 from typing import List
 from envs.models import Robot, Wall, Action, Reward
 from envs.utilities import distance, map_tuple, dist_from_point_to_line
+from operator import *
 
 BALCK = (0,0,0)
 
@@ -22,10 +23,9 @@ class Maze(object):
         ]
         self.walls.extend(walls)
         
-    def move_robot(action: Action):
-        new_pos = add_tuple(new_pos, action)
-        if not self.collide(new_pos):
-            self.robot.move(action)
+    def move_robot(self, action):
+        new_pos = self.robot.calculate_new_pos(action)
+        if not self.collide(new_pos): self.robot.move(action)
         
     def to_image(self, size):
         img = np.ones((self.size, self.size), dtype=np.uint8) * 255
@@ -37,8 +37,7 @@ class Maze(object):
         return img
     
     def collide(self, pos):
-        # for wall in self.walls:
-        #     if dist_from_point_to_line(pos, wall.a, wall.b) < self.robot.size:
-        #         return True
-        # return False
+        for wall in self.walls:
+            if dist_from_point_to_line(pos, wall.a, wall.b) < self.robot.size:
+                return True
         return False

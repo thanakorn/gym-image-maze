@@ -89,4 +89,38 @@ class MazeTest(unittest.TestCase):
         maze.move_robot(Action.Left)
         self.assertEqual(maze.robot.position, (3,3))
         
+    def test_maze_to_image(self):
+        walls = [
+            Wall((0,5), (3,5)), 
+            Wall((8,9), (8,7)),
+            Wall((7,1), (8,3))
+        ]
+        maze = Maze(size=10, robot_pos=(3, 7), robot_size=2, goal_pos=(2,2), walls=walls)
+        img = maze.to_image()
+        self.assertEqual(img.shape, (10, 10))
+        # Position = (y,x)
+        # Draw robot
+        self.assertEqual(img[7][3], 0)
+        self.assertEqual(img[5][3], 0)
+        self.assertEqual(img[9][3], 0)
+        self.assertEqual(img[7][1], 0)
+        self.assertEqual(img[7][5], 0)
+        # Draw goal
+        self.assertEqual(img[2][2], 0)
+        # Draw walls
+        self.assertEqual(img[5][0], 0)
+        self.assertEqual(img[5][3], 0)
+        self.assertEqual(img[9][8], 0)
+        self.assertEqual(img[7][8], 0)
+        self.assertEqual(img[1][7], 0)
+        self.assertEqual(img[3][8], 0)
+        # Draw borders
+        self.assertEqual(img[0][0], 0)
+        self.assertEqual(img[0][9], 0)
+        self.assertEqual(img[9][0], 0)
+        self.assertEqual(img[9][9], 0)
+        # Resize
+        img_resize = maze.to_image(30)
+        self.assertEqual(img_resize.shape, (30, 30))
+        
         

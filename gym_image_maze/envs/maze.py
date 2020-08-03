@@ -27,13 +27,14 @@ class Maze(object):
         new_pos = self.robot.calculate_new_pos(action)
         if not self.collide(new_pos): self.robot.move(action)
         
-    def to_image(self, size):
+    def to_image(self, img_size=None):
         img = np.ones((self.size, self.size), dtype=np.uint8) * 255
         cv.circle(img, (self.robot.position), self.robot.size, BALCK, -1)
         cv.circle(img, (self.goal), 1, BALCK, -1)
         for wall in self.walls:
             cv.line(img, wall.a, wall.b, BALCK)
-        img = cv.resize(img, (size, size), interpolation=cv.INTER_NEAREST)
+        if img_size is not None:
+            img = cv.resize(img, (img_size, img_size), interpolation=cv.INTER_NEAREST)
         return img
     
     def collide(self, pos):
@@ -41,3 +42,6 @@ class Maze(object):
             if dist_from_point_to_line(pos, wall.a, wall.b) < self.robot.size:
                 return True
         return False
+    
+    def is_robot_reach_goal(self):
+        return distance(self.robot.position, self.goal) <= self.robot.size

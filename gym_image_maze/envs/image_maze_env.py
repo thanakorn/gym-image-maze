@@ -7,6 +7,9 @@ from gym import error, spaces, utils
 from gym.utils import seeding
 from envs.models import *
 from envs.maze import Maze
+from envs.renderer import Renderer
+
+SCREEN_SIZE = 300
 
 class ImageMazeEnv(gym.Env):
     
@@ -16,15 +19,15 @@ class ImageMazeEnv(gym.Env):
     
     ALL_ACTIONS = [Action.Left, Action.Right, Action.Up, Action.Down, Action.Stop]
     
-    def __init__(self, config_file,screen_size=(300,300)):
+    def __init__(self, config_file):
         self.config_file = config_file
         self.done = False
-        
         self.maze = ImageMazeEnv.create_maze(config_file)
         self.action_space = spaces.Discrete(len(self.ALL_ACTIONS))
         low = np.zeros((self.maze.size, self.maze.size), dtype=np.uint8)
         high = np.ones((self.maze.size, self.maze.size), dtype=np.uint8) * 255
         self.observation_space = spaces.Box(low, high)
+        self.renderer = None
         
     def step(self, action):
         self.maze.move_robot(self.ALL_ACTIONS[action])
@@ -40,10 +43,12 @@ class ImageMazeEnv(gym.Env):
         return self.maze.to_image()
     
     def render(self, mode='human'):
-        pass
+        if self.renderer is None:
+            self.renderer = Renderer(SCREEN_SIZE, SCREEN_SIZE)
+        self.renderer.render(self.maze.to_image(SCREEN_SIZE))
     
     def close(self):
-        pass
+        self.renderer.close()
     
     @classmethod
     def create_maze(cls, config_file):

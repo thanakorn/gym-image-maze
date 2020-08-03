@@ -23,7 +23,7 @@ class Robot(object):
         self.position = self.calculate_new_pos(action)
         
     def calculate_new_pos(self, action):
-        d = map_tuple(mul, (self.size, self.size), action.value)
+        d = action.value
         new_pos = map_tuple(add, self.position, d)
         return new_pos
 

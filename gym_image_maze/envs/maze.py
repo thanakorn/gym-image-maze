@@ -39,7 +39,7 @@ class Maze(object):
     
     def collide(self, pos):
         for wall in self.walls:
-            if dist_from_point_to_line(pos, wall.a, wall.b) < self.robot.size:
+            if dist_from_point_to_line(pos, wall.a, wall.b) <= self.robot.size:
                 return True
         return False
     

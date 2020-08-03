@@ -16,21 +16,28 @@ class ImageMazeEnv(gym.Env):
     
     ALL_ACTIONS = [Action.Left, Action.Right, Action.Up, Action.Down, Action.Stop]
     
-    def __init__(self, config_file):
+    def __init__(self, config_file,screen_size=(300,300)):
+        self.config_file = config_file
+        self.done = False
+        
         self.maze = ImageMazeEnv.create_maze(config_file)
         self.action_space = spaces.Discrete(len(self.ALL_ACTIONS))
         low = np.zeros((self.maze.size, self.maze.size), dtype=np.uint8)
         high = np.ones((self.maze.size, self.maze.size), dtype=np.uint8) * 255
         self.observation_space = spaces.Box(low, high)
         
-        self.seed()
-        self.reset()
-        
     def step(self, action):
-        pass
+        self.maze.move_robot(self.ALL_ACTIONS[action])
+        # TODO: Add reward
+        reward = 0
+        # TODO: Determine whether the game is done
+        done = False
+        return self.maze.to_image(), reward, {}
     
     def reset(self):
-        pass
+        self.maze = ImageMazeEnv.create_maze(self.config_file)
+        self.done = False
+        return self.maze.to_image()
     
     def render(self, mode='human'):
         pass

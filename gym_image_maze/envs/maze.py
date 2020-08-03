@@ -44,4 +44,4 @@ class Maze(object):
         return False
     
     def is_robot_reach_goal(self):
-        return distance(self.robot.position, self.goal) <= self.robot.size
+        return self.robot.position == self.goal

@@ -17,3 +17,17 @@ class MazeEnvTest(unittest.TestCase):
         self.assertEqual(maze.walls[5].b, (20, 35))
         self.assertEqual(maze.walls[6].a, (15, 25))
         self.assertEqual(maze.walls[6].b, (25, 25))
+        
+    def test_maze_env_done(self):
+        env = ImageMazeEnv(os.path.join(os.getcwd(), 'gym_image_maze/tests/blank_maze_config.json'))
+        # 0: Left, 1: Right, 2: Up, 3: Down 
+        env.step(0)
+        env.step(0)
+        env.step(0)
+        self.assertFalse(env.done)
+        env.step(2)
+        env.step(2)
+        self.assertFalse(env.done)
+        env.step(2)
+        print(env.maze.robot.position)
+        self.assertTrue(env.done)

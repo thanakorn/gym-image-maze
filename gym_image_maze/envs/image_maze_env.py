@@ -34,8 +34,8 @@ class ImageMazeEnv(gym.Env):
         # TODO: Add reward
         reward = 0
         # TODO: Determine whether the game is done
-        done = False
-        return self.maze.to_image(), reward, {}
+        self.done = self.maze.is_robot_reach_goal()
+        return self.maze.to_image(), reward, self.done, {}
     
     def reset(self):
         self.maze = ImageMazeEnv.create_maze(self.config_file)

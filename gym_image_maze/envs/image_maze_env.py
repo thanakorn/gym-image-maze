@@ -81,3 +81,13 @@ class ImageMazeEnv(gym.Env):
         walls = [Wall((config['ax'], config['ay']), (config['bx'], config['by'])) for config in maze_config['walls']]
         maze = Maze(maze_size, robot_pos, robot_size, goal_pos, walls)
         return maze
+    
+def get_config_path():
+    dir_path = os.path.dirname(os.path.abspath(__file__))
+    config_path = os.path.join(dir_path, 'configs')
+    return config_path
+
+class ImageMazeV0(ImageMazeEnv):
+    def __init__(self):
+        config_file = 'image_maze_v0.json'
+        super().__init__(config_file=os.path.join(get_config_path(), config_file), time_limit=100)

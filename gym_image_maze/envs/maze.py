@@ -2,8 +2,8 @@ import cv2 as cv
 import numpy as np
 
 from typing import List
-from envs.models import Robot, Wall, Action, Reward
-from envs.utilities import distance, map_tuple, dist_from_point_to_line
+from gym_image_maze.envs.models import Robot, Wall, Action, Reward
+from gym_image_maze.envs.utilities import distance, map_tuple, dist_from_point_to_line
 from operator import *
 
 BALCK = (0,0,0)

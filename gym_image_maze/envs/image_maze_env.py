@@ -5,9 +5,9 @@ import os
 
 from gym import error, spaces, utils
 from gym.utils import seeding
-from envs.models import *
-from envs.maze import Maze
-from envs.renderer import Renderer
+from gym_image_maze.envs.models import *
+from gym_image_maze.envs.maze import Maze
+from gym_image_maze.envs.renderer import Renderer
 
 SCREEN_SIZE = 300
 

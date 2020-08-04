@@ -69,7 +69,8 @@ class ImageMazeEnv(gym.Env):
         self.renderer.render(self.maze.to_image(SCREEN_SIZE))
     
     def close(self):
-        self.renderer.close()
+        if self.renderer is not None:
+            self.renderer.close()
     
     @classmethod
     def create_maze(cls, config_file):

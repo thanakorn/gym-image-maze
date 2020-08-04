@@ -91,3 +91,8 @@ class ImageMazeV0(ImageMazeEnv):
     def __init__(self):
         config_file = 'image_maze_v0.json'
         super().__init__(config_file=os.path.join(get_config_path(), config_file), time_limit=100)
+        
+class ImageMazeV1(ImageMazeEnv):
+    def __init__(self):
+        config_file = 'image_maze_v1.json'
+        super().__init__(config_file=os.path.join(get_config_path(), config_file), time_limit=100)

@@ -1,5 +1,4 @@
 import numpy as np
-import matplotlib.cm as cmaps
 import pyglet
 import ctypes
 

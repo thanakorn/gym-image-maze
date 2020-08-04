@@ -19,9 +19,12 @@ class ImageMazeEnv(gym.Env):
     
     ALL_ACTIONS = [Action.Left, Action.Right, Action.Up, Action.Down, Action.Stop]
     
-    def __init__(self, config_file):
+    def __init__(self, config_file, time_limit):
         self.config_file = config_file
+        self.time_limit = time_limit
+        self.timestep = 0
         self.done = False
+        
         self.maze = ImageMazeEnv.create_maze(config_file)
         self.action_space = spaces.Discrete(len(self.ALL_ACTIONS))
         low = np.zeros((self.maze.size, self.maze.size), dtype=np.uint8)
@@ -30,16 +33,34 @@ class ImageMazeEnv(gym.Env):
         self.renderer = None
         
     def step(self, action):
-        self.maze.move_robot(self.ALL_ACTIONS[action])
-        # TODO: Add reward
-        reward = 0
-        # TODO: Determine whether the game is done
-        self.done = self.maze.is_robot_reach_goal()
-        return self.maze.to_image(), reward, self.done, {}
+        action = self.ALL_ACTIONS[action]
+        self.timestep += 1
+        
+        current_dist_to_goal = self.maze.dist_to_goal()
+        self.maze.move_robot(action)
+        new_dist_to_goal = self.maze.dist_to_goal()
+        self.done = self.maze.is_robot_reach_goal() or (self.timestep == self.time_limit)
+        
+        is_collide = False if action == Action.Stop else current_dist_to_goal == new_dist_to_goal
+        
+        reward = 0.
+        if self.maze.is_robot_reach_goal():
+            reward = Reward.Goal
+        elif is_collide:
+            reward = Reward.Collide
+        elif action == Action.Stop:
+            reward = Reward.Same
+        elif new_dist_to_goal < current_dist_to_goal:
+            reward = Reward.Closer
+        else:
+            reward = Reward.Further
+        
+        return self.maze.to_image(), reward.value, self.done, {}
     
     def reset(self):
         self.maze = ImageMazeEnv.create_maze(self.config_file)
         self.done = False
+        self.timestep = 0 
         return self.maze.to_image()
     
     def render(self, mode='human'):

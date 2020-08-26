@@ -11,6 +11,7 @@ BALCK = (0,0,0)
 class Maze(object):
     def __init__(self, size, robot_pos, robot_size, goal_pos, walls: List[Wall] = []):
         self.size = size
+        self.initial_pos = robot_pos
         self.robot = Robot(robot_pos, robot_size)
         self.goal = goal_pos
         # Add borders
@@ -48,3 +49,6 @@ class Maze(object):
     
     def dist_to_goal(self):
         return distance(self.robot.position, self.goal)
+    
+    def dist_from_start(self):
+        return distance(self.initial_pos, self.robot.position)

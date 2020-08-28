@@ -41,6 +41,22 @@ class MazeEnvTest(unittest.TestCase):
         _, _, done, _ = env.step(2)
         self.assertTrue(env.done)
         
+    def test_maze_env_collide_done(self):
+        env = ImageMazeEnv(os.path.join(os.getcwd(), 'gym_image_maze/tests/blank_maze_config.json'), 100)
+        # 0: Left, 1: Right, 2: Up, 3: Down, 4: Stop
+        env.reset() 
+        _, reward, done, _ = env.step(1)
+        self.assertEqual(reward, Reward.Collide.value)
+        self.assertTrue(done)
+        env.reset() 
+        _, _, done, _ = env.step(0)
+        self.assertFalse(done)
+        _, _, done, _ = env.step(0)
+        self.assertFalse(done)
+        _, reward, done, _ = env.step(3)
+        self.assertEqual(reward, Reward.Collide.value)
+        self.assertTrue(done)
+        
     def test_maze_env_time_limit(self):
         env = ImageMazeEnv(os.path.join(os.getcwd(), 'gym_image_maze/tests/blank_maze_config.json'), 5)
         # 0: Left, 1: Right, 2: Up, 3: Down, 4: Stop
@@ -107,21 +123,15 @@ class MazeEnvTest(unittest.TestCase):
         
         env.reset()
         total_reward = 0
+        _, reward, _, _ = env.step(0)
+        total_reward += reward
+        _, reward, _, _ = env.step(2)
+        total_reward += reward
         _, reward, _, _ = env.step(1)
         total_reward += reward
-        _, reward, _, _ = env.step(0)
+        _, reward, _, _ = env.step(1)
         total_reward += reward
-        _, reward, _, _ = env.step(0)
-        total_reward += reward
-        _, reward, _, _ = env.step(0)
-        total_reward += reward
-        _, reward, _, _ = env.step(2)
-        total_reward += reward
-        _, reward, _, _ = env.step(2)
-        total_reward += reward
-        _, reward, _, _ = env.step(2)
-        total_reward += reward
-        self.assertEqual(total_reward, 1003)
+        self.assertEqual(total_reward, -9)
         
         env.reset()
         total_reward = 0

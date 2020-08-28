@@ -13,7 +13,7 @@ class Reward(Enum):
     Closer  = 1
     Further = -1
     Same    = 0
-    Collide = -2
+    Collide = -10
     Goal    = 1000
         
 class Robot(object):

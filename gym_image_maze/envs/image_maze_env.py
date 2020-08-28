@@ -39,9 +39,9 @@ class ImageMazeEnv(gym.Env):
         current_dist_to_goal = self.maze.dist_to_goal()
         self.maze.move_robot(action)
         new_dist_to_goal = self.maze.dist_to_goal()
-        self.done = self.maze.is_robot_reach_goal() or (self.timestep == self.time_limit)
-        
         is_collide = False if action == Action.Stop else current_dist_to_goal == new_dist_to_goal
+        
+        self.done = self.maze.is_robot_reach_goal() or is_collide or (self.timestep == self.time_limit)
         
         reward = 0.
         if self.maze.is_robot_reach_goal():

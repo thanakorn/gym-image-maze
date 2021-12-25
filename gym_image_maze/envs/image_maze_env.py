@@ -17,7 +17,7 @@ class ImageMazeEnv(gym.Env):
         "render.modes": ["human", "rgb_array"],
     }
     
-    ALL_ACTIONS = [Action.Left, Action.Right, Action.Up, Action.Down, Action.Stop]
+    ALL_ACTIONS = [Action.Left, Action.Right, Action.Up, Action.Down]
     
     def __init__(self, config_file, time_limit, visualize=True):
         self.config_file = config_file
@@ -41,17 +41,15 @@ class ImageMazeEnv(gym.Env):
         current_dist_to_goal = self.maze.dist_to_goal()
         self.maze.move_robot(action)
         new_dist_to_goal = self.maze.dist_to_goal()
-        is_collide = False if action == Action.Stop else current_dist_to_goal == new_dist_to_goal
+        is_collide = current_dist_to_goal == new_dist_to_goal
         
-        self.done = self.maze.is_robot_reach_goal() or is_collide or (self.timestep == self.time_limit)
+        self.done = self.maze.is_robot_reach_goal() or (self.timestep == self.time_limit)
         
         reward = 0.
         if self.maze.is_robot_reach_goal():
             reward = Reward.Goal
         elif is_collide:
             reward = Reward.Collide
-        elif action == Action.Stop:
-            reward = Reward.Same
         elif new_dist_to_goal < current_dist_to_goal:
             reward = Reward.Closer
         else:

@@ -7,6 +7,6 @@ if __name__=='__main__':
     for i in range(500):
         env.render()
         action = env.action_space.sample()
-        env.step(action)
+        observation, reward, finish, _ = env.step(action)
         
     env.close()

@@ -7,7 +7,6 @@ class Action(Enum):
     Right   = (1, 0)
     Up      = (0, -1)
     Down    = (0, 1)
-    Stop    = (0, 0)
     
 class Reward(Enum):
     Closer  = 1

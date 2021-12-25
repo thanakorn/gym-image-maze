@@ -3,10 +3,10 @@ import numpy as np
 import ctypes
 import cv2 as cv
 from pyglet.window import Window, key
-from pyglet.image import ImageData
-from pyglet.gl import glClearColor
 from gym_image_maze.image_maze.maze import Maze
 from gym_image_maze.image_maze.models import Action
+from gym_image_maze.image_maze.renderer import Renderer
+from gym_image_maze.image_maze.maze_drawer import MazeDrawer
 
 class MazeGame(Window):
     def __init__(self, maze: Maze, height: int, width: int):
@@ -19,6 +19,7 @@ class MazeGame(Window):
         self.maze = maze
         self.width = width
         self.height = height
+        self.renderer = Renderer(self)
         self.alive = True
 
     def on_draw(self):
@@ -35,14 +36,7 @@ class MazeGame(Window):
             self.maze.move_robot(Action.Down)
 
     def render(self):
-        self.clear()
-        glClearColor(1,1,1,1)
-        img = self.maze_to_image()
-        img = np.ascontiguousarray(img[::-1, :])
-        img_c_array = img.ctypes.data_as(ctypes.POINTER(ctypes.c_float * img.size))
-        img_data = ImageData(img.shape[0], img.shape[1], 'L', img_c_array)
-        img_data.blit(0, 0)
-        self.flip()
+        self.renderer.render(MazeDrawer.draw_maze(self.maze, self.height, self.width))
 
     def run(self):
         while self.alive:
@@ -53,13 +47,3 @@ class MazeGame(Window):
                 self.alive = False
 
         self.close()
-
-    def maze_to_image(self):
-        BLACK = (0,0,0)
-        img = np.ones((self.maze.size, self.maze.size), dtype=np.uint8) * 255
-        cv.circle(img, (self.maze.robot.position), self.maze.robot.size, BLACK, -1)
-        cv.circle(img, (self.maze.goal), 1, BLACK, -1)
-        for wall in self.maze.walls:
-            cv.line(img, wall.a, wall.b, BLACK)
-        img = cv.resize(img, (self.height, self.width), interpolation=cv.INTER_NEAREST)
-        return img

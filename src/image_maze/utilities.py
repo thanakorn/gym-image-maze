@@ -22,14 +22,3 @@ def dist_from_point_to_line(point, line_start, line_end):
         return distance(point, closest_point_in_line)
     else:                  # closest point is not on the line
         return min(distance(point, line_start), distance(point, line_end))
-
-def to_maze_image(maze, img_size):
-    BALCK = (0,0,0)
-    img = np.ones((maze.size, maze.size), dtype=np.uint8) * 255
-    cv.circle(img, (maze.robot.position), maze.robot.size, BALCK, -1)
-    cv.circle(img, (maze.goal), 1, BALCK, -1)
-    for wall in maze.walls:
-        cv.line(img, wall.a, wall.b, BALCK)
-    if img_size is not None:
-        img = cv.resize(img, img_size, interpolation=cv.INTER_NEAREST)
-    return img

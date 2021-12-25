@@ -1,12 +1,11 @@
 import pyglet
 import numpy as np
 import ctypes
+import cv2 as cv
 from pyglet.window import Window, key
 from pyglet.image import ImageData
 from pyglet.gl import glClearColor
-from pyglet.sprite import Sprite
 from src.image_maze.maze import Maze
-from src.image_maze.utilities import to_maze_image
 from src.image_maze.models import Action
 
 class MazeGame(Window):
@@ -38,7 +37,7 @@ class MazeGame(Window):
     def render(self):
         self.clear()
         glClearColor(1,1,1,1)
-        img = to_maze_image(self.maze, (self.height, self.width))
+        img = self.maze_to_image()
         img = np.ascontiguousarray(img[::-1, :])
         img_c_array = img.ctypes.data_as(ctypes.POINTER(ctypes.c_float * img.size))
         img_data = ImageData(img.shape[0], img.shape[1], 'L', img_c_array)
@@ -54,3 +53,13 @@ class MazeGame(Window):
                 self.alive = False
 
         self.close()
+
+    def maze_to_image(self):
+        BLACK = (0,0,0)
+        img = np.ones((self.maze.size, self.maze.size), dtype=np.uint8) * 255
+        cv.circle(img, (self.maze.robot.position), self.maze.robot.size, BLACK, -1)
+        cv.circle(img, (self.maze.goal), 1, BLACK, -1)
+        for wall in self.maze.walls:
+            cv.line(img, wall.a, wall.b, BLACK)
+        img = cv.resize(img, (self.height, self.width), interpolation=cv.INTER_NEAREST)
+        return img

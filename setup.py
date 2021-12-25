@@ -6,6 +6,6 @@ try:
 except FileNotFoundError:
     requirements = []
 
-setup(name='src',
+setup(name='gym_image_maze',
       version='0.0.1',
       install_requires=requirements)

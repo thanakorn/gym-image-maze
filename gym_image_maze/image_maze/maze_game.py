@@ -5,8 +5,8 @@ import cv2 as cv
 from pyglet.window import Window, key
 from pyglet.image import ImageData
 from pyglet.gl import glClearColor
-from src.image_maze.maze import Maze
-from src.image_maze.models import Action
+from gym_image_maze.image_maze.maze import Maze
+from gym_image_maze.image_maze.models import Action
 
 class MazeGame(Window):
     def __init__(self, maze: Maze, height: int, width: int):

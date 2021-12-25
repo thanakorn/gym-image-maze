@@ -1,5 +1,5 @@
 from enum import Enum
-from src.image_maze.utilities import distance, map_tuple
+from gym_image_maze.image_maze.utilities import distance, map_tuple
 from operator import *
 
 class Action(Enum):

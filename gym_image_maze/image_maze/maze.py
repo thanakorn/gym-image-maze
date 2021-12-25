@@ -1,7 +1,7 @@
 import json
 from typing import List
-from src.image_maze.models import Robot, Wall
-from src.image_maze.utilities import distance, dist_from_point_to_line
+from gym_image_maze.image_maze.models import Robot, Wall
+from gym_image_maze.image_maze.utilities import distance, dist_from_point_to_line
 from operator import *
 
 class Maze(object):

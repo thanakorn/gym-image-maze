@@ -10,14 +10,14 @@ from src.image_maze.utilities import to_maze_image
 from src.image_maze.models import Action
 
 class MazeGame(Window):
-    def __init__(self, maze_config: str, height: int, width: int):
+    def __init__(self, maze: Maze, height: int, width: int):
         display = pyglet.canvas.get_display()
         screen = display.get_screens()[0]
         config = screen.get_best_config()
         context = config.create_context(None)
         super().__init__(width=width, height=height, config=config, context=context)
 
-        self.maze = Maze.from_config(maze_config)
+        self.maze = maze
         self.width = width
         self.height = height
         self.alive = True
@@ -49,7 +49,8 @@ class MazeGame(Window):
         while self.alive:
             self.render()
             event = self.dispatch_events()
+            # Check exit condition
+            if self.maze.is_robot_reach_goal():
+                self.alive = False
 
-if __name__=='__main__':
-    window = MazeGame('./configs/image_maze_v0.json', 500, 500)
-    window.run()
+        self.close()

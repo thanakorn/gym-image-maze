@@ -1,9 +1,19 @@
 import numpy as np
 import pyglet
 import ctypes
+from pyglet.window import Window
+
+DEFAULT_HEIGHT = 500
+DEFAULT_WIDTH = 500
 
 class Renderer(object):
-    def __init__(self, window):
+    def __init__(self, window=None):
+        if window is None:
+            display = pyglet.canvas.get_display()
+            screen = display.get_screens()[0]
+            config = screen.get_best_config()
+            context = config.create_context(None)
+            window = Window(width=DEFAULT_WIDTH, height=DEFAULT_HEIGHT, config=config, context=context)
         self.window = window
     
     def render(self, img_array):

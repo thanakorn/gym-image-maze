@@ -1,14 +1,22 @@
-import cv2 as cv
-import numpy as np
-
+import json
 from typing import List
-from gym_image_maze.envs.models import Robot, Wall, Action, Reward
-from gym_image_maze.envs.utilities import distance, map_tuple, dist_from_point_to_line
+from src.image_maze.models import Robot, Wall
+from src.image_maze.utilities import distance, dist_from_point_to_line
 from operator import *
 
-BALCK = (0,0,0)
-
 class Maze(object):
+    
+    @classmethod
+    def from_config(cls, config_file):
+        maze_config = json.load(open(config_file))
+        maze_size = maze_config['size']
+        robot_pos = maze_config['robot']['x'], maze_config['robot']['y']
+        robot_size = maze_config['robot']['size']
+        goal_pos = maze_config['goal']['x'], maze_config['goal']['y']
+        walls = [Wall((config['ax'], config['ay']), (config['bx'], config['by'])) for config in maze_config['walls']]
+        maze = Maze(maze_size, robot_pos, robot_size, goal_pos, walls)
+        return maze
+
     def __init__(self, size, robot_pos, robot_size, goal_pos, walls: List[Wall] = []):
         self.size = size
         self.initial_pos = robot_pos
@@ -27,16 +35,6 @@ class Maze(object):
     def move_robot(self, action):
         new_pos = self.robot.calculate_new_pos(action)
         if not self.collide(new_pos): self.robot.move(action)
-        
-    def to_image(self, img_size=None):
-        img = np.ones((self.size, self.size), dtype=np.uint8) * 255
-        cv.circle(img, (self.robot.position), self.robot.size, BALCK, -1)
-        cv.circle(img, (self.goal), 1, BALCK, -1)
-        for wall in self.walls:
-            cv.line(img, wall.a, wall.b, BALCK)
-        if img_size is not None:
-            img = cv.resize(img, (img_size, img_size), interpolation=cv.INTER_NEAREST)
-        return img
     
     def collide(self, pos):
         for wall in self.walls:

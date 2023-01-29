@@ -1,4 +1,4 @@
-# gym-image-maze
+# Deceptive Maze
 
 _Deceptive Maze_ is a reinforcement learning environment developed using PyGLET and OpenAI Gym. In this environment, the agent is placed into a maze with a mission to discover the treasure(denoted as a cross in the image). The agent can move in 4 directions each turn: Up, Down, Left, and Right. A reward of +1  is given every time the it gets closer to the goal and -1 otherwise. Also, the agent will be penalized by -10 if hit the wall. The episodes end when the agent either find the treasure or fail to do it within 200 turns. The controller has to decide which move is right at a particular state from the image of the maze.
 
